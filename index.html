@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="images.png" />
+  <title>Movie Buff</title>
+  <script type="text/javascript" src="app.js"></script>
+  <style>
+    body {
+      background-color: #673AB7;
+      color: white;
+    }
+
+    ul {
+      list-style: none;
+      text-align: center;
+    }
+
+
+    h1.mainHeaderh1{
+      display: inline-block;
+
+    }
+    .movieItemDivMainClass {
+      padding: 20px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      height: 250px;
+      width: 200px;
+      display: inline-block;
+      border: dotted 2px;
+      background: black;
+
+    }
+    #movieTitle {
+      float: left;
+      padding: 0px;
+      margin-bottom: 0px;
+      width: 80px;
+    }
+    #movieYear {
+      float: right;
+      padding: 0px;
+      margin-bottom: 0px;
+    }
+    button.loadMovieButton {
+        border-radius: 10px;
+        background-color: yellow;
+        color: black;
+        float: right;
+        font-size: 20px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="mainHeaderDiv">
+    <h1 class="mainHeaderh1">Movies</h1>
+    <button class="loadMovieButton" id="getMovieButton" onclick="moviebuff.getAllMovies()">
+      Get Movies
+    </button>
+    </div>
+    <hr/>
+    <div class="movieListMainDiv">
+      <ul>
+
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
