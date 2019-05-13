@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="shortcut icon" href="images.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>Movie Buff</title>
   <script type="text/javascript" src="app.js"></script>
   <style>
@@ -27,7 +28,7 @@
       padding: 20px;
       margin-right: 10px;
       margin-bottom: 10px;
-      height: 250px;
+      height: 300px;
       width: 200px;
       display: inline-block;
       border: dotted 2px;
@@ -55,15 +56,105 @@
         display: inline-block;
         margin-top: 2rem;
     }
+    button.sortDirectionButtonMainDiv {
+        border-radius: 1px;
+        background-color: skyblue;
+        color: black;
+        float: right;
+        font-size: 20px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 2rem;
+        margin-right: 1rem;
+        border: dotted 1px;
+    }
+
+    select.sortButtonMainDiv {
+        border-radius: 1px;
+        padding: 1px;
+        background-color: turquoise;
+        color: white;
+        float: right;
+        font-size: 20px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+
+    input.searchBarMainDiv {
+        padding: 1px;
+        background-color: white;
+        color: black;
+        float: right;
+        font-size: 20px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+
+    button.searchButtonMainDiv {
+      color: black;
+      float: right;
+      font-size: 20px;
+      text-align: center;
+      display: inline-block;
+      margin-top: 2rem;
+      margin-right: 1rem;
+    }
+
   </style>
 </head>
 <body>
   <div>
     <div class="mainHeaderDiv">
-    <h1 class="mainHeaderh1">Movies</h1>
-    <button class="loadMovieButton" id="getMovieButton" onclick="moviebuff.getAllMovies()">
+    <h1
+      id="appTitle"
+      class="mainHeaderh1"
+      onmouseover="moviebuff.animateElement('appTitle')"
+      onmouseout="moviebuff.restoreElement('appTitle')">
+        Movie Buff
+    </h1>
+    <button
+      id="getMovieButton"
+      class="loadMovieButton"
+      onmouseover="moviebuff.animateElement('getMovieButton')"
+      onmouseout="moviebuff.restoreElement('getMovieButton')"
+      onclick="moviebuff.getAllMovies()"
+      title="Click to get movie list"
+    >
       Get Movies
     </button>
+    <button
+        id="sortDirectionButton"
+        class="sortDirectionButtonMainDiv"
+        onclick="moviebuff.changeSortDirection(document.getElementById('sortDirectionButton').innerHTML)"
+    >
+      &uarr;
+    </button>
+    <select
+      id="sortButton"
+      class="sortButtonMainDiv"
+      onchange="moviebuff.sortMovies(this.options[this.selectedIndex].value)"
+    >
+      <option value="" selected disabled>Sort Movies:</option>
+      <option value="Title">By Title</option>
+      <option value="Year">By Year</option>
+    </select>
+    <button
+     id="searchButton"
+     class="searchButtonMainDiv"
+     onclick="moviebuff.searchMovie()"
+     >
+      <i class="fa fa-search">
+      </i>
+    </button>
+    <input
+      id="searchBar"
+      class="searchBarMainDiv"
+      placeholder="Search Movies..."
+      type="text"
+      value
+    />
     </div>
     <hr/>
     <div class="movieListMainDiv">

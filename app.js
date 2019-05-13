@@ -2,12 +2,15 @@ import axios from 'axios';
 
 const BASE_URL = 'http://www.omdbapi.com';
 
-const getMovieList = async () => {
+var retrievedMovieList = [];
+
+const getMovieList = async (searchString) => {
   try {
-    const res = await axios.get(`${BASE_URL}/?s=bat&apikey=a9e4bebd`);
+    console.log("searchString: ",searchString);
+    const res = await axios.get(`${BASE_URL}/?s=${searchString}&apikey=a9e4bebd`);
 
     const movieList = res.data.Search;
-
+    retrievedMovieList = movieList;
     console.log(`GET: Here's the list of movies`, movieList);
 
     return movieList;
@@ -16,8 +19,16 @@ const getMovieList = async () => {
   }
 };
 
+export const animateElement = (id) => {
+  return document.getElementById(id).style = 'transform: scale(1.2); transition:all 300ms ease-in ';
+}
+
+export const restoreElement = (id) => {
+  return document.getElementById(id).style = 'transform: scale(1); transition:all 300ms ease-out';
+}
+
 const enlargeMovieImage = (movieImageDivId) => {
-  return document.getElementById(movieImageDivId).style = 'position: relative; transform:scale(1.5); transition:all 300ms ease-in 0.1s; z-index:1; opacity:0.8';
+  return document.getElementById(movieImageDivId).style = 'position: relative; transform:scale(1.2); transition:all 300ms ease-in 0.1s; z-index:1; opacity:0.8';
 }
 
 const normalSizeMovieImage = (movieImageDivId) => {
@@ -25,7 +36,7 @@ const normalSizeMovieImage = (movieImageDivId) => {
 }
 
 const showAddButton = (addMovieBtnId) => {
-  return document.getElementById(addMovieBtnId).style = 'opacity:1; background: rgba(0, 0, 0, .3); color: yellow; position: relative;top:-100px; text-align: center;'
+  return document.getElementById(addMovieBtnId).style = 'opacity:0.8; padding:1rem; background: purple; color: yellow;  position: relative; top:-100px; text-transform: uppercase; z-Index:1; font-weight:bold; transition:all 300ms ease-in; border: solid 2px yellow';
 }
 
 const hideAddButton = (addMovieBtnId) => {
@@ -52,8 +63,8 @@ const createMovieBlock = movieItem => {
                                           });
 
   mItemAddInnerBtn.setAttribute('id', "Add"+movieItem.Title+movieItem.Year.substr(0,4));
-  mItemAddInnerBtn.innerHTML = "Add To Collection";
-  mItemAddInnerBtn.style = 'opacity:0;position: relative;top:-100px; text-align: center;';
+  mItemAddInnerBtn.innerHTML = "Add To Favourites";
+  mItemAddInnerBtn.style = 'opacity:0;';
   mItemAddBtnDiv.setAttribute('class','addButtonMainDiv');
   mItemAddBtnDiv.appendChild(mItemAddInnerBtn)
 
@@ -74,13 +85,23 @@ const createMovieBlock = movieItem => {
   return mItemDiv;
 };
 
-const addMoviesToDOM = movies => {
+const addMoviesToDOM = (movies,sortParam=false) => {
   const ul = document.querySelector('ul');
 
   if (Array.isArray(movies) && movies.length > 0) {
-    movies.map(movie => {
-      ul.appendChild(createMovieBlock(movie));
-    });
+    if(sortParam){
+      const ul2 = document.createElement('ul');
+      movies.map(movie => {
+        ul2.appendChild(createMovieBlock(movie))
+      });
+        ul.parentNode.replaceChild(ul2,ul)
+    }else{
+      movies.map(movie => {
+        ul.appendChild(createMovieBlock(movie))
+      });
+
+    }
+
   } else if (Array.isArray(movies) && movies.length===0) {
     ul.appendChild(createMovieBlock({Title:'No Movies Available'}));
   } else {
@@ -88,7 +109,39 @@ const addMoviesToDOM = movies => {
   }
 };
 
-export const getAllMovies = async () => {
-  console.log("Executed after");
-  addMoviesToDOM(await getMovieList());
+export const changeSortDirection = (direction) => {
+  console.log("got clicked:: ",direction);
+  const srtDirectionBtn = document.getElementById('sortDirectionButton');
+  srtDirectionBtn.innerHTML = direction.trim() ===`&darr;` ? `&uarr` : `&darr;`;
+}
+
+export const sortMovies = (sortId) =>{
+  console.log("executing sort!",retrievedMovieList);
+  if(retrievedMovieList && retrievedMovieList.length <= 0){
+    let noSearchObject = {Title:"No Movies matching your taste",
+            Year:"Nope",
+            Poster: "https://cdn.dribbble.com/users/1554526/screenshots/3399669/no_results_found.png"
+          };
+    return noSearchObject;
+  }else{
+    let sortedList = sortId === 'Year'? retrievedMovieList.sort((a,b)=>{return parseInt(a.Year)-parseInt(b.Year)}) :
+                                        retrievedMovieList.sort((a,b)=>{return a.Title.toLowerCase() < b.Title.toLowerCase()?-1:1});
+
+    console.log("Sorted List:", sortedList);
+    return addMoviesToDOM(sortedList,true);
+  }
+}
+
+export const searchMovie = () =>{
+  let movieTitle = document.getElementById('searchBar').value
+  getAllMovies(movieTitle,true);
+}
+
+export const getAllMovies = async (tytl="bat",srch=false) => {
+  console.log("Executed after srch: ",srch,tytl);
+  if(!srch){
+    addMoviesToDOM(await getMovieList(tytl),false);
+  }else{
+    addMoviesToDOM(await getMovieList(tytl),true);
+  }
 };
