@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://www.omdbapi.com';
-const API_KEY = '';
+const API_KEY = 'a9e4bebd';
 
 var retrievedMovieList = [];
 
@@ -285,3 +285,9 @@ export const getAllMovies = async (tytl="",srch=false) => {
     addMoviesToDOM(await getMovieList(tytl),true);
   }
 };
+
+//Execute this function right after the window loads
+export const onLoadFunction = () =>{
+  getAllMovies('Harry Potter',true);
+  showTab('searchRandomMovies',document.getElementById('searchArenaButton'))
+}
