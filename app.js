@@ -1,5 +1,5 @@
 import axios from 'axios';
-const decrypt = require(__dirname+'/decryptKey');
+//const decrypt = require(__dirname+'/decryptKey');
 
 const ALGO = process.env.ALGORITHM || '';
 const KEY = process.env.SEC_KEY || '';
