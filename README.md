@@ -10,7 +10,7 @@ Clone the git repository into your local machine.<br>
 ### In the root directory:
 1. Run `npm install`.<br>
 2. Run `npm run dev`.<br>
-3. Open [http:\\localhost:1234](http:\\localhost:1234) in browser to witness awesomeness!
+3. Open [http://localhost:1234](http://localhost:1234) in browser to witness awesomeness!
 
 ## Live Demo
-`Live demo` of the app can be tracked at - [movie-buff](https://secure-shelf-48154.herokuapp.com/)
+`Live demo` of the app can be tracked at - [movie-buff](https://movie-buffed.herokuapp.com/)

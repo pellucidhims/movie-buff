@@ -1,6 +1,12 @@
 import axios from 'axios';
+const decrypt = require('./decryptKey');
+
+const ALGO = process.env.ALGORITHM || '';
+const KEY = process.env.SEC_KEY || '';
 
 const BASE_URL = 'https://www.omdbapi.com';
+
+//decrypt(process.env.API_KEY, ALGO, KEY)
 const API_KEY = process.env.API_KEY;
 
 var retrievedMovieList = [];
@@ -296,6 +302,17 @@ export const getAllMovies = async (tytl="",srch=false) => {
 
 //Execute this function right after the window loads
 export const onLoadFunction = () =>{
+  //Attach eventlistener for detecting 'enter key' press in search bar
+  let inp = document.getElementById('searchBar');
+  inp.addEventListener('keyup',(e)=>{
+    if(e.keyCode === 13){
+      e.preventDefault();
+      if(document.getElementById('searchBar').value.trim() !== ""){
+        document.getElementById('searchButton').click();
+      }
+    }
+  })
+
   getAllMovies('Harry Potter',true);
   showTab('searchRandomMovies',document.getElementById('searchArenaButton'))
 }
