@@ -19,7 +19,6 @@ var randomMoviesList = [
 //This function initiates axios call to fetch results from OMDB database and update list accordingly
 const getMovieList = async (searchString) => {
   try {
-    console.log("searchString: ",searchString);
     const res = await axios.get(`${BASE_URL}/?s=${searchString}&apikey=${API_KEY}`);
     let noResultsFound = [{Title:"No Movies matching your taste",
             Year:"NAN",
@@ -27,18 +26,17 @@ const getMovieList = async (searchString) => {
           }]
     const movieList = res.data.Search || noResultsFound;
     retrievedMovieList = retrievedMovieList.concat(movieList.filter((movieItm,idx)=>{ return !contains(retrievedMovieList,movieItm)}));
-    console.log(`GET: Here's the list of movies`, movieList);
 
     return movieList;
   } catch (e) {
-    console.error(e);
+    console.log("Some Network error occoured: ",e);
   }
 };
 
 //This function checks if a movies is part of the given movieList
 const contains = (inputArr,obj) => {
     for(let item of inputArr){
-      if(item.Title === obj.Title && item.Year === obj.Year && item.Poster === obj.Poster){
+      if(item.imdbID === obj.imdbID){
       return true
       }
     }
@@ -71,7 +69,6 @@ const hideAddButton = (addMovieBtnId) => {
 
 //This function creates thumbnail for movies with movie - Poster, Name and Year to be added to list
 const createMovieBlock = (movieItem,idx,myBucketRqst=false) => {
-  console.log("index is: ******",idx);
   const mItemDiv = document.createElement('div');
   const mItemImage = document.createElement('img');
   const mItemTitle = document.createElement('p');
@@ -83,14 +80,14 @@ const createMovieBlock = (movieItem,idx,myBucketRqst=false) => {
   mItemDiv.setAttribute('id',movieItem.Title+movieItem.Year.substr(0,4)+idx);
   mItemDiv.addEventListener('mouseover',function(){
                                           enlargeMovieImage(movieItem.Title+movieItem.Year.substr(0,4)+idx);
-                                          movieItem.Year !== "NAN"?showAddButton((myBucketRqst?"Remove":"Add")+movieItem.Title+movieItem.Year.substr(0,4)+idx):''
+                                          movieItem.Year !== "NAN"?showAddButton((myBucketRqst?"Remove":"Add")+movieItem.imdbID):''
                                         });
   mItemDiv.addEventListener('mouseleave', function(){
                                             normalSizeMovieImage(movieItem.Title+movieItem.Year.substr(0,4)+idx);
-                                            movieItem.Year !== "NAN"?hideAddButton((myBucketRqst?"Remove":"Add")+movieItem.Title+movieItem.Year.substr(0,4)+idx):''
+                                            movieItem.Year !== "NAN"?hideAddButton((myBucketRqst?"Remove":"Add")+movieItem.imdbID):''
                                           });
 
-  mItemAddInnerBtn.setAttribute('id', (myBucketRqst?"Remove":"Add")+movieItem.Title+movieItem.Year.substr(0,4)+idx);
+  mItemAddInnerBtn.setAttribute('id', (myBucketRqst?"Remove":"Add")+movieItem.imdbID);
   mItemAddInnerBtn.addEventListener("click", function(){
                                                 if(myBucketRqst){
                                                   removeFromMyBucket(movieItem);
@@ -130,16 +127,36 @@ const addMovieToMyBucket = (movieItem) => {
     if(!contains(myMovieBucket,movieItem)){
       myMovieBucket = myMovieBucket.concat(movieItem)
       addMoviesToDOM(myMovieBucket,true,true)
+      let addBtn = document.getElementById('Add'+movieItem.imdbID);
+      addBtn.innerHTML = 'ADDED TO FAVOURITES';
+      addBtn.style.backgroundColor = 'green';
+    }else{
+      let addBtn = document.getElementById('Add'+movieItem.imdbID);
+      addBtn.innerHTML = 'AVAILABLE IN FAVOURITES';
+      addBtn.style.backgroundColor = 'orange';
     }
 }
 
 //This function removes the movie item from user's bucket
 const removeFromMyBucket = (movieItem) => {
     myMovieBucket = myMovieBucket.filter((item)=>{
-                                        return (item.Year !== movieItem.Year && item.Title !== movieItem.Title && item.Poster !== movieItem.Poster)
+                                        return (item.imdbID !== movieItem.imdbID)
                                   })
-    addMoviesToDOM(myMovieBucket,true,true);
+    myMovieBucket && myMovieBucket.length > 0 ? addMoviesToDOM(myMovieBucket,true,true) : createEmptyDomList('myMoviesList');
+    //at the same time replace movie element text in allMoviesList
+    let addBtn = document.getElementById('Add'+movieItem.imdbID);
+    addBtn.innerHTML = 'ADD TO FAVOURITES';
+    addBtn.style.backgroundColor = 'purple';
   }
+
+//This function is to clear the last movie item from myMovieList DOM
+const createEmptyDomList = (domListName) =>{
+  const emptyUl = document.getElementById(domListName);
+  while (emptyUl.firstChild) {
+    emptyUl.removeChild(emptyUl.firstChild);
+}
+}
+
 
 //This function is triggered to accordingly display the tabs based on user input
 export const showTab = (currPage,element) =>{
@@ -161,9 +178,7 @@ const addMoviesToDOM = (movies,sortParam=false,myMovies=false) => {
   if(myMovies){
     var ul = document.getElementById('myMoviesList');
   }else{
-    console.log("hereeeeeee");
     var ul = document.getElementById('searchRandomList');
-    console.log("UL:",ul);
   }
   if (Array.isArray(movies) && movies.length > 0) {
     if(sortParam){
@@ -187,8 +202,6 @@ const addMoviesToDOM = (movies,sortParam=false,myMovies=false) => {
       movies.map((movie,index) => {
         if(movie.Year!=="NAN"){
           ul.appendChild(createMovieBlock(movie,index))
-        }else{
-          console.log("this movie: ",movie.Title," has year: ",movie.Year);
         }
       });
 
@@ -203,7 +216,6 @@ const addMoviesToDOM = (movies,sortParam=false,myMovies=false) => {
 
 //This function is triggered when sorting order is to be changed and then accordingly calls fsortMovies() to sort movies
 export const changeSortDirection = (direction) => {
-  console.log("got clicked:: ",direction);
   const srtDirectionBtn = document.getElementById('sortDirectionButton');
   if(srtDirectionBtn.value === "0"){
     document.getElementById('sortDirectionArrow').innerHTML = "&darr;";
@@ -228,7 +240,6 @@ export const changeSortDirection = (direction) => {
 
 //Sort the movies based on sort type and sort order(Ascending or Descending)
 export const sortMovies = (sortId,sortOrder) =>{
-  console.log("sort id",sortId, " sort order: ",sortOrder);
   showTab('searchRandomMovies',document.getElementById('searchArenaButton'))
   if(retrievedMovieList && retrievedMovieList.length <= 0){
     let noSearchObject = [{Title:"No Movies matching your taste",
@@ -249,7 +260,6 @@ export const sortMovies = (sortId,sortOrder) =>{
                                               retrievedMovieList.sort((b,a)=>{return a.Title.toLowerCase() < b.Title.toLowerCase()?-1:1})
                                          );
 
-    console.log("Sorted List:", sortedList);
     return addMoviesToDOM(sortedList,true);
   }
 }
@@ -257,7 +267,6 @@ export const sortMovies = (sortId,sortOrder) =>{
 
 //This function is triggered when user searches for a particular movie in search box
 export const searchMovie = () =>{
-  console.log("select value: ",document.getElementById('sortButton').value);
   showTab('searchRandomMovies',document.getElementById('searchArenaButton'));
   document.getElementById('sortButton').value = "";
   let movieTitle = document.getElementById('searchBar').value;
@@ -275,7 +284,6 @@ export const searchMovie = () =>{
 
 //This function gets the list of movies from  getMovieList() and then calls another function addMoviesToDOM() to append elements to DOM
 export const getAllMovies = async (tytl="",srch=false) => {
-  console.log("Executed after srch: ",srch,tytl);
   showTab('searchRandomMovies',document.getElementById('searchArenaButton'))
   if(!srch){
     let randomIdx = Math.floor(Math.random() * (randomMoviesList.length-1 - 0 + 1));
