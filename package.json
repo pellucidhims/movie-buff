@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "parcel ./index.html --global moviebuff",
+    "start": "parcel ./index.html --global moviebuff",
     "build": "parcel build index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,5 +30,8 @@
     "parcel-bundler": "^1.12.3",
     "webpack": "^4.31.0",
     "webpack-cli": "^3.3.2"
+  },
+  "engines": {
+    "node": "8.10.0"
   }
 }

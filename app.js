@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://www.omdbapi.com';
-const API_KEY = '';
+const API_KEY = process.env.API_KEY;
 
 var retrievedMovieList = [];
 
