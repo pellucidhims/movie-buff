@@ -1,6 +1,12 @@
 import axios from 'axios';
 //const decrypt = require(__dirname+'/decryptKey');
 
+//HTML buttons text
+const ADD_TO = 'ADD TO FAVOURITES';
+const ADDED_TO = 'ADDED TO FAVOURITES';
+const AVAILABLE = 'AVAILABLE IN FAVOURITES';
+const REMOVE = 'REMOVE';
+
 const ALGO = process.env.ALGORITHM || '';
 const KEY = process.env.SEC_KEY || '';
 
@@ -69,8 +75,8 @@ const showAddButton = (addMovieBtnId) => {
   let btn = document.getElementById(addMovieBtnId);
   let clr = 'purple';
   console.log("btn is: ",btn);
-  if(btn.innerHTML !== 'Add To Favourites'){
-    if(btn.innerHTML === 'Remove'){
+  if(btn.innerHTML.toUpperCase() !== ADD_TO){
+    if(btn.innerHTML.toUpperCase() === REMOVE){
       clr = 'red';
     }else{
       clr = 'green';
@@ -112,7 +118,7 @@ const createMovieBlock = (movieItem,idx,myBucketRqst=false) => {
                                                 }
                                                 }
                                     )
-  mItemAddInnerBtn.innerHTML = myBucketRqst?"Remove":"Add To Favourites";
+  mItemAddInnerBtn.innerHTML = myBucketRqst?"Remove":ADD_TO;
   mItemAddInnerBtn.style = 'opacity:0;';
   mItemAddBtnDiv.setAttribute('class','addButtonMainDiv');
   mItemAddBtnDiv.appendChild(mItemAddInnerBtn)
@@ -144,11 +150,11 @@ const addMovieToMyBucket = (movieItem) => {
       myMovieBucket = myMovieBucket.concat(movieItem)
       addMoviesToDOM(myMovieBucket,true,true)
       let addBtn = document.getElementById('Add'+movieItem.imdbID);
-      addBtn.innerHTML = 'ADDED TO FAVOURITES';
+      addBtn.innerHTML = ADDED_TO;
       addBtn.style.backgroundColor = 'green';
     }else{
       let addBtn = document.getElementById('Add'+movieItem.imdbID);
-      addBtn.innerHTML = 'AVAILABLE IN FAVOURITES';
+      addBtn.innerHTML = AVAILABLE;
       addBtn.style.backgroundColor = 'orange';
     }
 }
@@ -161,7 +167,7 @@ const removeFromMyBucket = (movieItem) => {
     myMovieBucket && myMovieBucket.length > 0 ? addMoviesToDOM(myMovieBucket,true,true) : createEmptyDomList('myMoviesList');
     //at the same time replace movie element text in allMoviesList
     let addBtn = document.getElementById('Add'+movieItem.imdbID);
-    addBtn.innerHTML = 'ADD TO FAVOURITES';
+    addBtn.innerHTML = ADD_TO;
     addBtn.style.backgroundColor = 'purple';
   }
 
