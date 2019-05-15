@@ -66,7 +66,17 @@ const normalSizeMovieImage = (movieImageDivId) => {
 }
 
 const showAddButton = (addMovieBtnId) => {
-  return document.getElementById(addMovieBtnId).style = 'opacity:0.8; padding:1rem; background: purple; color: white;  position: relative; top:-100px; text-transform: uppercase; z-Index:1; font-weight:bold; transition:all 300ms ease-in; border: dotted 2px white';
+  let btn = document.getElementById(addMovieBtnId);
+  let clr = 'purple';
+  console.log("btn is: ",btn);
+  if(btn.innerHTML !== 'Add To Favourites'){
+    if(btn.innerHTML === 'Remove'){
+      clr = 'red';
+    }else{
+      clr = 'green';
+    }
+  };
+  return btn.style = 'opacity:0.8; padding:1rem; color: white;  position: relative; top:-100px; text-transform: uppercase; z-Index:1; font-weight:bold; transition:all 300ms ease-in; border: dotted 2px white;'+ 'background:'+clr;
 }
 
 const hideAddButton = (addMovieBtnId) => {
@@ -174,9 +184,11 @@ export const showTab = (currPage,element) =>{
   tablinks = document.getElementsByClassName("myMovieButtonStyle");
   for (let i = 0; i < tablinks.length; i++) {
     tablinks[i].style.backgroundColor = "";
+    tablinks[i].style.color = "";
   }
-  document.getElementById(currPage).style.display = "inline-block";
+  document.getElementById(currPage).style.display = "block";
   element.style.backgroundColor = 'grey';
+  element.style.color = 'yellow';
 }
 
 //This function makes the changes in DOM tree by attaching Movie thumbnails [created using createMovieBlock()] to ul element.

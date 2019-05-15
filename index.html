@@ -9,12 +9,51 @@
   <title>Movie Buff</title>
   <script type="text/javascript" src="app.js"></script>
   <style>
+      @media screen and (max-width: 600px) {
+    .mainHeaderDiv {
+      flex-direction: column;
+      float: none;
+      width: 100%;
+      display: block;
+    }
+    .searchSortDiv {
+      padding: 10px;
+      background-color: black;
+      right: 0px;
+      padding: 10px;
+    }
+    #sortButton{
+      font-size: 10px;
+      margin-top: 0px;
+    }
+    #sortDirectionButton{
+      font-size: 10px;
+      margin-top: 0px;
+    }
+    #sortDirectionArrow{
+      font-size: 10px;
+      margin-top: 0px;
+    }
+    #searchButton{
+      font-size: 10px;
+      margin-right: 0px;
+      margin-top: 0px;
+      margin-right: 1%;
+    }
+    #searchBar{
+      font-size: 10px;
+      margin-right: 0px;
+      margin-top: 0px;
+    }
+    h4{
+      font-size: 10px;
+    }
+    }
     body {
       background-image: url("https://previews.123rf.com/images/marilynv/marilynv0909/marilynv090900061/5497949-old-film-strips-grunge-background.jpg");
       color: white;
       background-attachment: fixed;
     }
-
     ul {
       list-style: none;
       position: absolute;
@@ -90,6 +129,17 @@
         background-color: orange;
     }
 
+    .searchSortDiv {
+      display: flex;
+      position: fixed;
+      right: 10px;
+      margin-top: 1%;
+      background: black;
+      opacity: 0.9;
+      padding: 1%;
+      z-index: 1;
+    }
+
     div.sortDirectionButtonMainDiv{
         float: right;
         font-size: 20px;
@@ -98,19 +148,17 @@
         position: relative;
     }
     input.sortDirectionButtonMainDiv {
-        border-radius: 1px;
-        background-color: skyblue;
+        background-color: none;
         color: black;
-        float: right;
-        right: 10%;
         font-size: 20px;
         text-align: center;
         display: inline-block;
         position: relative;
         margin-top: 2rem;
-        margin-right: 1rem;
+        float: right;
+        right: 18%;
+        padding: 10px;
         opacity: 0;
-        padding: 0em 10px 0em 0em;
         z-index: 1;
     }
     span.sortDirectionButtonMainDiv {
@@ -157,7 +205,7 @@
     }
 
     input.searchBarMainDiv:focus{
-        width: 70%;
+        width: 65%;
     }
 
 
@@ -167,7 +215,6 @@
       font-size: 20px;
       text-align: center;
       display: inline-block;
-      margin-right: 1rem;
     }
 
     button.searchButtonMainDiv {
@@ -190,75 +237,78 @@
 
   </style>
 </head>
-<body onload="moviebuff.onLoadFunction()">
+<body onload="moviebuff.onLoadFunction()" media="screen">
   <div>
     <div class="mainHeaderDiv">
-      <button
-        id="myMovieBucketButton"
-        class="myMovieButtonStyle"
-        onclick="moviebuff.showTab('myMoviesCollection',this)"
-        title="My Movie Collection"
-      >
-          <h4>MY FAVOURITES</h4>
-      </button>
-      <button
-        id="searchArenaButton"
-        class="myMovieButtonStyle"
-        onclick="moviebuff.showTab('searchRandomMovies',this)"
-        title="Search Your Movies"
-      >
-          <h4>SEARCH ARENA</h4>
-      </button>
-      <button
-        id="getMovieButton"
-        class="loadMovieButton"
-        onmouseover="moviebuff.animateElement('getMovieButton')"
-        onmouseout="moviebuff.restoreElement('getMovieButton')"
-        onclick="moviebuff.getAllMovies()"
-        title="Click to get movie list"
-      >
-        <h4>RANDOMS</h4>
-      </button>
-      <div class="sortDirectionButtonMainDiv">
-        <input
-            id="sortDirectionButton"
-            class="sortDirectionButtonMainDiv"
-            onclick="moviebuff.changeSortDirection(document.getElementById('sortDirectionButton').innerHTML)"
-            type="button"
-            value="0"
-            title="Sort Ascending"
-        />
-        <span id="sortDirectionArrow" class="sortDirectionButtonMainDiv">&uarr;</span>
-        <select
-          id="sortButton"
-          class="sortButtonMainDiv"
-          onchange="moviebuff.sortMovies(this.options[this.selectedIndex].value,document.getElementById('sortDirectionButton').value)"
+      <div>
+        <button
+          id="myMovieBucketButton"
+          class="myMovieButtonStyle"
+          onclick="moviebuff.showTab('myMoviesCollection',this)"
+          title="My Movie Collection"
         >
-          <option value="" selected disabled>Sort Movies:</option>
-          <option value="Title">By Title</option>
-          <option value="Year">By Year</option>
-        </select>
-    </div>
-    <div class="searchButtonMainDiv">
-      <button
-       id="searchButton"
-       class="searchButtonMainDiv"
-       onclick="moviebuff.searchMovie()"
-       >
-        <i class="fa fa-search">
-        </i>
-      </button>
-      <input
-        id="searchBar"
-        class="searchBarMainDiv"
-        placeholder="Search Movies..."
-        type="text"
-        value
-      />
-    </div>
-    <hr/>
+            <h4>MY FAVOURITES</h4>
+        </button>
+        <button
+          id="searchArenaButton"
+          class="myMovieButtonStyle"
+          onclick="moviebuff.showTab('searchRandomMovies',this)"
+          title="Search Your Movies"
+        >
+            <h4>SEARCH ARENA</h4>
+        </button>
+        <button
+          id="getMovieButton"
+          class="loadMovieButton"
+          onmouseover="moviebuff.animateElement('getMovieButton')"
+          onmouseout="moviebuff.restoreElement('getMovieButton')"
+          onclick="moviebuff.getAllMovies()"
+          title="Click to get movie list"
+        >
+          <h4>RANDOMS</h4>
+        </button>
+        <hr style="z-index:2;" />
+      </div>
   </div>
     <div id="searchRandomMovies" class="movieListMainDiv">
+      <div class="searchSortDiv">
+        <div class="sortDirectionButtonMainDiv">
+          <input
+              id="sortDirectionButton"
+              class="sortDirectionButtonMainDiv"
+              onclick="moviebuff.changeSortDirection(document.getElementById('sortDirectionButton').innerHTML)"
+              type="button"
+              value="0"
+              title="Sort Ascending"
+          />
+          <span id="sortDirectionArrow" class="sortDirectionButtonMainDiv">&uarr;</span>
+          <select
+            id="sortButton"
+            class="sortButtonMainDiv"
+            onchange="moviebuff.sortMovies(this.options[this.selectedIndex].value,document.getElementById('sortDirectionButton').value)"
+          >
+            <option value="" selected disabled>Sort Movies:</option>
+            <option value="Title">By Title</option>
+            <option value="Year">By Year</option>
+          </select>
+        </div>
+        <div class="searchButtonMainDiv">
+          <button
+           id="searchButton"
+           class="searchButtonMainDiv"
+           onclick="moviebuff.searchMovie()"
+           >
+            <i class="fa fa-search">
+            </i>
+          </button>
+          <input
+            id="searchBar"
+            class="searchBarMainDiv"
+            placeholder="Search Movies..."
+            type="text"
+          />
+        </div>
+      </div>
       <ul id="searchRandomList">
           <!--* Search Items will be displayed here*/-->
       </ul>
